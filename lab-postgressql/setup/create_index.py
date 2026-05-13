@@ -7,7 +7,7 @@ Run once (before the lab):
 
 Requires the following environment variables (or a .env file in the project root):
     AZURE_SEARCH_ENDPOINT, AZURE_SEARCH_API_KEY, AZURE_SEARCH_INDEX_NAME
-    AZURE_OPENAI_ENDPOINT, AZURE_OPENAI_API_KEY, AZURE_OPENAI_EMBEDDING_DEPLOYMENT
+    AZURE_OPENAI_ENDPOINT_LAB, AZURE_OPENAI_API_KEY_LAB, AZURE_OPENAI_EMBEDDING_DEPLOYMENT_LAB
 """
 
 from __future__ import annotations
@@ -221,12 +221,12 @@ DOCUMENTS = [
 
 async def embed_batch(texts: list[str]) -> list[list[float]]:
     client = AsyncAzureOpenAI(
-        azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
-        api_key=os.environ["AZURE_OPENAI_API_KEY"],
+        azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT_LAB"],
+        api_key=os.environ["AZURE_OPENAI_API_KEY_LAB"],
         api_version="2024-02-01",
     )
     resp = await client.embeddings.create(
-        model=os.environ.get("AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-ada-002"),
+        model=os.environ.get("AZURE_OPENAI_EMBEDDING_DEPLOYMENT_LAB", "text-embedding-ada-002"),
         input=texts,
     )
     await client.close()
