@@ -133,9 +133,9 @@ az role assignment create --assignee "<your-azure-ad-object-id>" --role "Azure A
 |---|---|
 | `FOUNDRY_PROJECT_ENDPOINT` | New Microsoft Foundry Portal > Project > Homepage |
 | `FOUNDRY_MODEL_DEPLOYMENT_NAME` | Microsoft Foundry Portal > Build > Models |
-| `AZURE_OPENAI_ENDPOINT` | Azure Portal > Azure OpenAI Resource > Resource Management > Keys and Endpoint |
-| `AZURE_OPENAI_API_KEY` | Azure Portal > Azure OpenAI Resource > Resource Management > Keys and Endpoint |
-| `AZURE_OPENAI_EMBEDDING_DEPLOYMENT` | Microsoft Foundry Portal > Project > Deployments |
+| `AZURE_OPENAI_ENDPOINT_LAB` | Azure Portal > Azure OpenAI Resource > Resource Management > Keys and Endpoint |
+| `AZURE_OPENAI_API_KEY_LAB` | Azure Portal > Azure OpenAI Resource > Resource Management > Keys and Endpoint |
+| `AZURE_OPENAI_EMBEDDING_DEPLOYMENT_LAB` | Microsoft Foundry Portal > Project > Deployments |
 | `AZURE_SEARCH_ENDPOINT` | Azure Portal > Search service resource > Overview > Url |
 | `AZURE_SEARCH_API_KEY` | Azure Portal > Search service resource > Settings > Keys |
 | `AZURE_SEARCH_INDEX_NAME` | Leave as `return-policies` |

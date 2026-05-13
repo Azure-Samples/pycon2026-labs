@@ -52,12 +52,12 @@ async def close_pool() -> None:
 async def _embed(text: str) -> list[float]:
     """Return an embedding vector for *text* using Azure OpenAI."""
     client = AsyncAzureOpenAI(
-        azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
-        api_key=os.environ["AZURE_OPENAI_API_KEY"],
+        azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT_LAB"],
+        api_key=os.environ["AZURE_OPENAI_API_KEY_LAB"],
         api_version="2024-02-01",
     )
     resp = await client.embeddings.create(
-        model=os.environ.get("AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-ada-002"),
+        model=os.environ.get("AZURE_OPENAI_EMBEDDING_DEPLOYMENT_LAB", "text-embedding-ada-002"),
         input=text,
     )
     await client.close()
