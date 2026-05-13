@@ -49,6 +49,35 @@ async def close_pool() -> None:
         _pool = None
 
 
+async def list_demo_orders(limit: int = 8) -> list[dict[str, str]]:
+    """Return a small set of demo orders for the terminal banner."""
+    if _pool is None:
+        await init_pool()
+
+    rows = await _pool.fetch(  # type: ignore[union-attr]
+        """
+        SELECT order_id,
+               product_name,
+               product_category,
+               delivery_date
+        FROM orders
+        ORDER BY order_id
+        LIMIT $1
+        """,
+        limit,
+    )
+
+    return [
+        {
+            "order_id": row["order_id"],
+            "product_name": row["product_name"],
+            "product_category": row["product_category"],
+            "delivery_date": str(row["delivery_date"]),
+        }
+        for row in rows
+    ]
+
+
 async def _embed(text: str) -> list[float]:
     """Return an embedding vector for *text* using Azure OpenAI."""
     client = AsyncAzureOpenAI(
@@ -78,8 +107,9 @@ async def lookup_order(order_id: str) -> str:
 
     Returns:
         A JSON string with order_id, customer_name, product_name,
-        product_category, order_date, delivery_date, status, and total_amount.
-        Returns an error JSON if the order is not found.
+        product_category, order_date, delivery_date, current_date,
+        days_since_delivery, status, and total_amount. Returns an error JSON
+        if the order is not found.
     """
     oid = order_id.strip().upper()
 
@@ -87,7 +117,7 @@ async def lookup_order(order_id: str) -> str:
     print(f"\n{'─'*60}")
     print(f"  [TOOL] lookup_order  →  SQL query")
     print(f"{'─'*60}")
-    print(f"  Query : SELECT order_date, delivery_date, product_category, ...")
+    print(f"  Query : SELECT order_date, delivery_date, current_date, ...")
     print(f"          FROM orders JOIN customers")
     print(f"          WHERE order_id = '{oid}'")
     # ───────────────────────────────────────────────────────────────────────
@@ -100,6 +130,8 @@ async def lookup_order(order_id: str) -> str:
         SELECT o.order_id,
                o.order_date,
                o.delivery_date,
+                             timezone('America/Los_Angeles', now())::date AS current_date,
+                             (timezone('America/Los_Angeles', now())::date - o.delivery_date) AS days_since_delivery,
                o.product_name,
                o.product_category,
                o.status,
@@ -122,6 +154,8 @@ async def lookup_order(order_id: str) -> str:
             "product_category": row["product_category"],
             "order_date":       str(row["order_date"]),
             "delivery_date":    str(row["delivery_date"]),
+            "current_date":     str(row["current_date"]),
+            "days_since_delivery": int(row["days_since_delivery"]),
             "status":           row["status"],
             "total_amount":     float(row["total_amount"]),
         }

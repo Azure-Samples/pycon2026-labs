@@ -41,15 +41,25 @@ Sample questions to try
 
 Order IDs in the demo database
 ───────────────────────────────
-  ORD-001  Sony WH-1000XM5 headphones (Electronics)   — delivered 45 days ago
-  ORD-002  Python Crash Course, 3rd Ed. (Books)        — delivered 10 days ago
-  ORD-003  Samsung 65" QLED TV (Electronics)           — delivered 20 days ago
-  ORD-004  Nike Running Jacket (Clothing)              — delivered 5 days ago
-  ORD-005  Instant Pot Duo 7-in-1 (Home & Kitchen)    — delivered 3 days ago
-  ORD-006  Apple AirPods Pro (Electronics)             — delivered 8 days ago
-  ORD-007  Dell XPS 15 Laptop (Electronics)            — delivered 15 days ago
-  ORD-008  The Pragmatic Programmer (Books)            — delivered 60 days ago
+{order_lines}
 """
+
+
+def _format_order_line(order: dict[str, str]) -> str:
+    name = order["product_name"]
+    if len(name) > 38:
+        name = f"{name[:35]}..."
+
+    return (
+        f"  {order['order_id']:<8} {name:<38} "
+        f"({order['product_category']}) — delivered {order['delivery_date']}"
+    )
+
+
+async def build_banner() -> str:
+    orders = await tool_module.list_demo_orders()
+    order_lines = "\n".join(_format_order_line(order) for order in orders)
+    return BANNER.format(order_lines=order_lines)
 
 
 # ---------------------------------------------------------------------------
@@ -63,7 +73,7 @@ async def chat_loop() -> None:
     try:
         async with build_agent() as agent:
             thread_id: str | None = None
-            print(BANNER)
+            print(await build_banner())
 
             while True:
                 # ── read user input ────────────────────────────────────────

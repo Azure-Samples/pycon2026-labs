@@ -14,19 +14,70 @@ def results_to_ship(result:Document) -> Ship:
 def get_ship_by_name(name:str)->str:
     db = client["travel"]
     collection_name = db["ships"]
-    print(f"-{name}-")
-    ship = collection_name.find_one({'name': name.strip()})
-    #ship = collection_name.find({"$text": {"$search": name.strip()}}).limit(1)
-    if ship == None: return '' 
+    normalized_name = name.strip()
+    print(f"-{normalized_name}-")
+
+    ship = collection_name.find_one(
+        {"metadata.name": {"$regex": f"^{normalized_name}$", "$options": "i"}}
+    )
+
+    if ship is None:
+        ship = collection_name.find_one({"name": {"$regex": f"^{normalized_name}$", "$options": "i"}})
+
+    if ship is None:
+        print("ship not found")
+        return ''
+
+    if 'metadata' in ship and 'shipid' in ship['metadata']:
+        return ship['metadata']['shipid']
+
     if 'shipid' in ship:
         return ship['shipid']
-    else:
-        print('ship not found')
-        return ''
+
+    print('ship id not found')
+    return ''
 
 
 def format_currency(amount: float) -> str:
     return f"${amount:,.2f}"
+
+
+def destination_search(query: str) -> list[dict]:
+    db = client["travel"]
+    collection_name = db["destinations"]
+    normalized_query = query.strip().lower()
+
+    destinations = list(
+        collection_name.find({}, {"_id": 0, "name": 1, "location": 1, "description": 1, "activities": 1})
+    )
+
+    direct_matches = [
+        destination for destination in destinations if destination.get("name", "").lower() in normalized_query
+    ]
+
+    if direct_matches:
+        return direct_matches
+
+    query_terms = {
+        term for term in normalized_query.replace("?", " ").replace(",", " ").split() if len(term) > 3
+    }
+
+    scored_matches: list[tuple[int, dict]] = []
+    for destination in destinations:
+        haystack = " ".join(
+            [
+                destination.get("name", ""),
+                destination.get("location", ""),
+                destination.get("description", ""),
+                " ".join(destination.get("activities", [])),
+            ]
+        ).lower()
+        score = sum(1 for term in query_terms if term in haystack)
+        if score > 0:
+            scored_matches.append((score, destination))
+
+    scored_matches.sort(key=lambda item: item[0], reverse=True)
+    return [destination for _, destination in scored_matches[:2]]
 
 
 def itnerary_search(name:str) -> list[Itinerary]:

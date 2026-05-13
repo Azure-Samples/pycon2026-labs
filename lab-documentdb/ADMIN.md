@@ -37,12 +37,12 @@ Follow the instructions in the [Quickstart: Create an Azure DocumentDB cluster b
 1. On the **text-embedding-3-small** page, click **Use this model** to deploy the model.
 1. In the **Deploy text-embedding-3-small** window, click **Deploy**.
 
-## Deploy the gpt-5.4 model
+## Deploy the gpt-5.4-mini model
 
 1. In the Foundry portal, navigate to the **Model catalog**.
-1. In the **Model catalog** search for `gpt-5.4`.
-1. On the **gpt-5.4** page, click **Use this model** to deploy the model.
-1. In the **Deploy gpt-5.4** window, click **Deploy**.
+1. In the **Model catalog** search for `gpt-5.4-mini`.
+1. On the **gpt-5.4-mini** page, click **Use this model** to deploy the model.
+1. In the **Deploy gpt-5.4-mini** window, click **Deploy**.
 
 ## Get your environment variables
 
@@ -104,7 +104,7 @@ You will need to sign-in to Azure via the Azure Resources extension. The extensi
 
 1. In VS Code, in the left Activity Bar, click the **Azure** icon.
 1. In the **Azure** extension, click **Sign in to Azure...**.
-1. Once you've signed in, expand **[tbd tenant name]** > **Azure DocumentDB** > **[tbd resource name]**.
+1. Once you've signed in, expand **PyCon** > **Azure DocumentDB** > **pyconus2026**.
 1. When prompted, enter the **username** and **password** for the **DocumentDB cluster**.
 1. After you've signed in, confirm that you're able to view the **travel** database for the cluster.
 

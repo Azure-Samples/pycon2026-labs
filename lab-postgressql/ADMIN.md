@@ -22,16 +22,19 @@ You will create resources via the Azure CLI.
 # For BAMI tenants
 az login --tenant <your BAMI tenant>.onmicrosoft.com --use-device-code
 
+# For PyCon
+az login --tenant pycondemos.onmicrosoft.com --use-device-code
+
 # For non-BAMI tenants
 az login
 
-# Run this command for BAMI/non-BAMI tenants
+# Run this command for BAMI/PyCon/non-BAMI tenants
 az group create --name rg-shopeasy-lab --location westus
 ```
 
 ### Provision Azure PostgreSQL Flexible Server
 
-> 💡 **Note:** Be sure to replace the `<insert password>` placeholder.
+> 💡 **Note:** Be sure to replace the `<insert server>` and `<insert password>` placeholders.
 
 ```bash
 az postgres flexible-server create --resource-group rg-shopeasy-lab --name shopeasy-pg --location westus --admin-user pgadmin --admin-password "<insert password>" --sku-name Standard_B1ms --tier Burstable --version 16 --public-access 0.0.0.0
@@ -39,28 +42,34 @@ az postgres flexible-server create --resource-group rg-shopeasy-lab --name shope
 
 Then create the database:
 
+> 💡 **Note:** Be sure to replace the `<insert server>` placeholder.
+
 ```bash
-az postgres flexible-server db create --resource-group rg-shopeasy-lab --server-name shopeasy-pg --database-name shopease
+az postgres flexible-server db create --resource-group rg-shopeasy-lab --server-name <insert server> --database-name shopease
 ```
 
 To mitigate firewall connection errors, add your IP.
 
-> 💡 **Note:** Be sure to replace the `<your-ip>` placeholders. You can get our IP address by running the command: `curl ifconfig.me`.
+> 💡 **Note:** Be sure to replace the `<insert server>` and `<your-ip>` placeholders. You can get our IP address by running the command: `curl ifconfig.me`.
 
 ```bash
-az postgres flexible-server firewall-rule create --resource-group rg-shopeasy-lab --name shopeasy-pg --rule-name AllowMyIP --start-ip-address <your-ip> --end-ip-address <your-ip>
+az postgres flexible-server firewall-rule create --resource-group rg-shopeasy-lab --name <insert server> --rule-name AllowMyIP --start-ip-address <your-ip> --end-ip-address <your-ip>
 ```
 
 ### Provision Azure AI Search
 
+> 💡 **Note:** Be sure to replace the `<insert searcj service name>` placeholder.
+
 ```bash
-az search service create --resource-group rg-shopeasy-lab --name shopeasy-search --location westus --sku basic
+az search service create --resource-group rg-shopeasy-lab --name <insert search service name> --location westus --sku basic
 ```
 
 Retrieve the admin API key (you will need it for your environment variables):
 
+> 💡 **Note:** Be sure to replace the `<insert search service name>` placeholder.
+
 ```bash
-az search admin-key show --resource-group rg-shopeasy-lab --service-name shopeasy-search --query primaryKey -o tsv
+az search admin-key show --resource-group rg-shopeasy-lab --service-name <insert search service name> --query primaryKey -o tsv
 ```
 
 ### Create an Azure OpenAI resource
@@ -97,8 +106,8 @@ az search admin-key show --resource-group rg-shopeasy-lab --service-name shopeas
 
 1. In the **New Foundry** portal, navigate to **Discover**.
 1. Select **Models**.
-1. Search for `gpt-5.4`.
-1. On the **gpt-5.4** page, click **Deploy**.
+1. Search for `gpt-4o`.
+1. On the **gpt-4o** page, click **Deploy**.
 1. Select **Default settings**.
 
 ## Grant yourself the Contributor role on the Foundry project
@@ -142,7 +151,7 @@ az role assignment create --assignee "<your-azure-ad-object-id>" --role "Azure A
 | `POSTGRES_HOST` | Azure Portal > PostgreSQL Resource > Overview > Server name |
 | `POSTGRES_PORT` | `5432` |
 | `POSTGRES_DB` | `shopease` |
-| `POSTGRES_USER` | The admin username you chose |
+| `POSTGRES_USER` | pgadmin |
 | `POSTGRES_PASSWORD` | The admin password you chose |
 
 ## Authenticate with Azure
@@ -153,6 +162,9 @@ This sets up `DefaultAzureCredential` used by the agent to call the Foundry mode
 # For BAMI tenants
 az login --tenant <your BAMI tenant>.onmicrosoft.com --use-device-code
 
+# For PyCon
+az login --tenant pycondemos.onmicrosoft.com --use-device-code
+
 # For non-BAMI tenants
 az login
 ```
@@ -162,7 +174,7 @@ az login
 ### Seed the PostgreSQL Database
 
 ```bash
-python setup/seed_db.py
+python lab-postgressql/setup/seed_db.py
 ```
 
 Expected output:
@@ -183,7 +195,7 @@ Sample rows:
 ### Create the AI Search Index & Upload Policy Documents
 
 ```bash
-python setup/create_index.py
+python lab-postgressql/setup/create_index.py
 ```
 
 Expected output:
@@ -211,7 +223,7 @@ Index contents:
 ### Start the Agent
 
 ```bash
-python chat.py
+python lab-postgressql/chat.py
 ```
 
 You will see the startup banner with a list of demo order IDs and sample questions.
@@ -238,6 +250,12 @@ You will need to sign-in to Azure via the Azure CLI.
 
 ```bash
 az login --tenant <your BAMI tenant>.onmicrosoft.com --use-device-code
+```
+
+**For Pycon**
+
+```bash
+az login --tenant pycondemos.onmicrosoft.com --use-device-code
 ```
 
 **For non-BAMI tenants**
