@@ -6,6 +6,12 @@ Ever wonder what's happening when an AI agent "remembers" things? Run this trave
 
 ---
 
+## Setup
+
+Before you begin, complete the setup instructions in the [ADMIN.MD](lab-documentdb\ADMIN.md) file. Once complete, either save the environment variables in an `.env` file or in the **Codespaces** > **Codespace user secrets** of your GitHub account.
+
+---
+
 ## Inspect what Azure DocumentDB is doing (2 min)
 
 Before running the agent, take a look at the three tools it uses to read from and write to Azure DocumentDB.
