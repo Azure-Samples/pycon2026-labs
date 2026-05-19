@@ -8,7 +8,7 @@ Ever wonder what's happening when an AI agent "remembers" things? Run this trave
 
 ## Setup
 
-Before you begin, complete the setup instructions in the [ADMIN.MD](lab-documentdb\ADMIN.md) file. Once complete, either save the environment variables in an `.env` file or in the **Codespaces** > **Codespace user secrets** of your GitHub account.
+Before you begin, complete the setup instructions in the [ADMIN.md](ADMIN.md) and either save the environment variables in an `.env` file or in the **Codespaces** > **Codespace user secrets** of your GitHub account.
 
 ---
 

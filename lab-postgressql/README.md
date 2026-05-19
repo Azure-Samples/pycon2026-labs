@@ -6,7 +6,7 @@ Build and interact with a semantic search app that uses Azure PostgreSQL for vec
 
 ## Setup
 
-Before you begin, complete the setup instructions in the [ADMIN.MD](lab-postgressql.md) file. Once complete, either save the environment variables in an `.env` file or in the **Codespaces** > **Codespace user secrets** of your GitHub account.
+Before you begin, complete the setup instructions in the [ADMIN.md](ADMIN.md) and either save the environment variables in an `.env` file or in the **Codespaces** > **Codespace user secrets** of your GitHub account.
 
 ---
 
