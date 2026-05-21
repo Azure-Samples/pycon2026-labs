@@ -80,7 +80,7 @@ Let's now fix the bug in the `quiz.py` file.
 
 ---
 
-## Step 5 — Take the Python Quiz (2 min)
+## Take the Python Quiz (2 min)
 
 Try taking the quiz! In a new terminal, run the command:
 
